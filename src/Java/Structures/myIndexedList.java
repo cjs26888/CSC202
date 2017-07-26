@@ -3,7 +3,7 @@ package Java.Structures;
 import Resources.Exceptions.DuplicateException;
 import Resources.Exceptions.InvalidInputException;
 import Resources.Exceptions.UnderflowException;
-import Resources.Interfaces.IIndex;
+import Resources.Interfaces.I_Index;
 
 /**
  * Purpose: To create an myIndexedList that takes generics
@@ -11,7 +11,7 @@ import Resources.Interfaces.IIndex;
  * @author Cameron on 6/8/2017.
  */
 
-public class myIndexedList<E extends Comparable<E>> implements IIndex
+public class myIndexedList<E extends Comparable<E>> implements I_Index
 {
     //Constructor
     public myIndexedList()
@@ -396,7 +396,7 @@ public class myIndexedList<E extends Comparable<E>> implements IIndex
     @Override
     /**
      * Determines the index of the Node that has an Info member matching that of the passed value
-     * Specified By: indexOf() in interface IIndex
+     * Specified By: indexOf() in interface I_Index
      * @param Object element - The value with which the List is tested against to find the index of a matching element
      * @return int - the index number of the Node that has the same Info value as the passed value
      * @throws InvalidInputException - If the passed element is not in the List

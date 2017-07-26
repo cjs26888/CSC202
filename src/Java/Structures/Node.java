@@ -44,7 +44,7 @@ class Node<E extends Comparable<E>>
     @Override
     public String toString()
     {
-        return "Node: " + "    INFO: " + Info + "    LINK: " + Link + "\n";
+        return "[Node (" + Info + ")]---->LINK: " + Link;
     }
     
     void setIndex(int n) {this.Index = n;}

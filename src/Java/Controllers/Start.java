@@ -19,8 +19,8 @@ public class Start extends Application
 {
     private static final String FILE_NAME = "../UserInfo.dat";
     static File f = new File(FILE_NAME);
-    Stage stage1 = new Stage();
-    Scene act1, act2, act3;
+    Stage stage = new Stage();
+    Scene act;
     @FXML
     Button signIn;
     
@@ -29,29 +29,17 @@ public class Start extends Application
     {
         readFile();
         
-        Parent signup = FXMLLoader.load(getClass().getResource("/Resources/View/Main.fxml"));
-        act1 = new Scene(signup);
-        stage1.setScene(act1);
-        stage1.show();
+        switchViews("/Resources/View/Main.fxml", null);
     }
     
-    public void UpChoice() throws IOException {
-        Stage temp = (Stage) signIn.getScene().getWindow();
-        temp.close();
-        Parent signup = FXMLLoader.load(getClass().getResource("/Resources/View/SignUp.fxml"));
-        act2 = new Scene(signup);
-        stage1.setScene(act2);
-        stage1.show();
+    public void UpChoice() throws IOException
+    {
+        switchViews("/Resources/View/SignUp.fxml", signIn);
     }
     
     public void InChoice() throws IOException
     {
-        Stage temp = (Stage) signIn.getScene().getWindow();
-        temp.close();
-        Parent signin = FXMLLoader.load(getClass().getResource("/Resources/View/SignIn.fxml"));
-        act3 = new Scene(signin);
-        stage1.setScene(act3);
-        stage1.show();
+        switchViews("/Resources/View/SignIn.fxml", signIn);
     }
     
     public static String readFile()
@@ -137,6 +125,21 @@ public class Start extends Application
         }
         //System.out.println(tmpUserOne.toString());
         return tmpUserOne;
+    }
+    
+    public void switchViews(String fxmlFile, Object o) throws IOException
+    {
+        if(o != null)
+        {
+            Button btn = (Button) o;
+            Stage temp = (Stage) btn.getScene().getWindow();
+            temp.close();
+        }
+        
+        Parent Mom = FXMLLoader.load(getClass().getResource(fxmlFile));
+        act = new Scene(Mom);
+        stage.setScene(act);
+        stage.show();
     }
     
     public static void main(String args[])

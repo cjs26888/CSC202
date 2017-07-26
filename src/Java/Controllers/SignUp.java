@@ -191,7 +191,7 @@ public class SignUp implements Initializable
         
         stage = new Stage();
         
-        Parent message = FXMLLoader.load(getClass().getResource("/Main/Resources/View/Main.fxml"));
+        Parent message = FXMLLoader.load(getClass().getResource("/Resources/View/Main.fxml"));
         Scene Message = new Scene(message);
         stage.setScene(Message);
         stage.show();

@@ -2,14 +2,14 @@ package Java.Structures;
 
 import Resources.Exceptions.DuplicateException;
 import Resources.Exceptions.UnderflowException;
-import Resources.Interfaces.IOrdered;
+import Resources.Interfaces.I_OrderedList;
 
 /**
  * Purpose: To create an myOrderedList that accepts generics
  * Order: add(), remove(), contains(), isEmpty(), size(), get(), reset(), getNext(), toString(), equals()
  * @author Cameron on 6/8/2017.
  */
-public class myOrderedList<E extends Comparable<E>> implements IOrdered
+public class myOrderedList<E extends Comparable<E>> implements I_OrderedList
 {
     //Constructor
     public myOrderedList()
@@ -26,7 +26,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Adds the specified element to the List
-     * Specified By: add() in interface IOrdered
+     * Specified By: add() in interface I_OrderedList
      * @param Object element - The element the user wishes to add to the List
      * @return Void
      * @throws DuplicateException - If the element is already in the List
@@ -86,7 +86,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Searches through the List to find the passed element
-     * Specified By: contains() in interface IOrdered
+     * Specified By: contains() in interface I_OrderedList
      * @param Object element - The element to be found in the List
      * @return Boolean - Returns true or false based on if the method found the requested element
      * @throws UnderflowException - If the method was attempted and found the List was empty
@@ -102,14 +102,17 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
             if(currentNode.getInfo().compareTo(element) != 0) {
                 for (int i = 0; i < size(); i++)
                 {
-                    if (currentNode.getLink().getInfo().compareTo(element) == 0)
+                    if(currentNode.getLink() != null)
                     {
-                        contains = true;
-                        break;
-                    }
-                    else
-                    {
-                        currentNode = currentNode.getLink();
+                        if (currentNode.getLink().getInfo().compareTo(element) == 0)
+                        {
+                            contains = true;
+                            break;
+                        }
+                        else
+                        {
+                            currentNode = currentNode.getLink();
+                        }
                     }
                 }
             }
@@ -129,7 +132,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Determines if the List ahas anything in it
-     * Specified By: isEmpty(0 in interface IOrdered
+     * Specified By: isEmpty(0 in interface I_OrderedList
      * @param None
      * @return Boolean - Returns true or false dependent on if the List has anything in it
      */
@@ -148,7 +151,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Determines the number of elements in the List
-     * Specified By: size() in interface IOrdered
+     * Specified By: size() in interface I_OrderedList
      * @param None
      * @return int - The number of elements in the List
      * @throws UnderflowException - If the method is attempted on an empty List
@@ -177,7 +180,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Fetches the Node containing Info that matches the passed element
-     * Specified By: get() in interface IOrdered
+     * Specified By: get() in interface I_OrderedList
      * @param Object element - The element the user wishes to be returned in order to manipulate it
      * @return E - The Node that has a matching info to the passed element
      */
@@ -219,7 +222,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Returns the currentNode variable to the beginning of the List so the List can be stepped through
-     * Specified By: reset() in interface IOrdered
+     * Specified By: reset() in interface I_OrderedList
      * @param None
      * @return Void
      */
@@ -233,7 +236,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Returns the node next to the current Node for manipulation
-     * Specified By: getNext() in interface IOrdered
+     * Specified By: getNext() in interface I_OrderedList
      * @param None
      * @return E - The Node with its Info and Link member variables
      * @throws UnderflowException - If the method was attempted on an empty List
@@ -255,7 +258,7 @@ public class myOrderedList<E extends Comparable<E>> implements IOrdered
     @Override
     /**
      * Turns the List into a String detailing the Info of each Node
-     * Specified By: toString() in interface IOrdered
+     * Specified By: toString() in interface I_OrderedList
      * @param None
      * @return String - The List's Info in String form
      * @throws UnderflowException - If the method is attempted on an empty List

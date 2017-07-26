@@ -2,14 +2,14 @@ package Java.Structures;
 
 import Resources.Exceptions.DuplicateException;
 import Resources.Exceptions.UnderflowException;
-import Resources.Interfaces.IStack;
+import Resources.Interfaces.I_Stack;
 
 /**
  * Purpose: To create a myStack Object that uses any type in its structure.
  * Order: push(), pop(), top(), isEmpty(), isFull(), size()
  * @author Cameron on 6/8/2017.
  */
-public class myStack<T extends Comparable<T>> implements IStack
+public class myStack<T extends Comparable<T>> implements I_Stack
 {
     public myStack() {
         Index = 0;
@@ -26,7 +26,7 @@ public class myStack<T extends Comparable<T>> implements IStack
 
     /**
      * The element added to the array. Set the element reference to an item, Set the link reference to the previous top of stack, Set the top of the stack to the new stack element
-     * Specified By: push() in interface IStack
+     * Specified By: push() in interface I_Stack
      * @param Object element - An object that the user wishes to have pushed on top of the myStack
      * @return Void
      * @throws DuplicateException - If the element already exists in the myStack
@@ -61,7 +61,7 @@ public class myStack<T extends Comparable<T>> implements IStack
     @Override
     /**
      * Removes the element at the top index, assigning top to the next lowest node
-     * Specified By: pop() in interface IStack
+     * Specified By: pop() in interface I_Stack
      * @param None
      * @return Void
      * @throws UnderflowException - If the method is trying to remove something from an empty List
@@ -81,7 +81,7 @@ public class myStack<T extends Comparable<T>> implements IStack
     @Override
     /**
      * Gets the Object on the top of the myStack
-     * Specified By: top() in interface IStack
+     * Specified By: top() in interface I_Stack
      * @param None
      * @return Object - The Object on the top of the myStack
      * @throws UnderflowException - If the method is trying to remove something from an empty List
@@ -101,7 +101,7 @@ public class myStack<T extends Comparable<T>> implements IStack
     @Override
     /**
      * Determines of the List contains anything in it
-     * Specified By: isEmpty in interface IStack
+     * Specified By: isEmpty in interface I_Stack
      * @param None
      * @return Boolean - The value, true or false, depending on the status of the List
      */
@@ -114,7 +114,7 @@ public class myStack<T extends Comparable<T>> implements IStack
     @Override
     /**
      * This Linked List called myStack is unbounded and thus is never Full
-     * Specified By: isFull() in interface IStack
+     * Specified By: isFull() in interface I_Stack
      * @param None
      * @return Boolean - The value, true or false, based on the upper limit of the List
      */
@@ -127,7 +127,7 @@ public class myStack<T extends Comparable<T>> implements IStack
     @Override
     /**
      * The amount of elements in the List. Determined through incrementing an index
-     * Specified By: size() in interface IStack
+     * Specified By: size() in interface I_Stack
      * @param None
      * @return int - The number of elements in the List
      */

@@ -57,8 +57,8 @@ public class Restaurant implements Comparable<Restaurant>
     public void setLocation(String restaurantLocation){this.location.set(restaurantLocation);}
     public void setNumber(String restaurant_Phone_Number){this.number.set(restaurant_Phone_Number);}
     public void setImage(String restaurantImage){this.image.set(restaurantImage);}
-    //public void setLatitude(String restaurantLatitude){this.setLocation(restaurantLatitude + ", " + getLongitude());}
-    //public void setLongitude(String restaurantLongitude){this.setLocation(restaurantLongitude + ", " + getLatitude());}
+    public void setLatitude(String restaurantLatitude){this.setLocation(restaurantLatitude + ", " + getLongitude());}
+    public void setLongitude(String restaurantLongitude){this.setLocation(getLatitude() + ", " + restaurantLongitude);}
     
     @Override
     public String toString()
@@ -136,85 +136,13 @@ public class Restaurant implements Comparable<Restaurant>
         return cmp;
     }
     
-    public StringProperty nameProperty()
-    {
-//        todo for all these
-        /*
-        if(this.name == null)
-        {
-        this.name = new SimpleStringProperty(this, "name");
-        }
-        */
-        return this.name;
-    }
+    public StringProperty nameProperty() {return this.name;}
     
-    public StringProperty addressProperty()
-    {
-        /*
-        if(this.address == null)
-        {
-            this.address = new SimpleStringProperty(this, "address");
-        }
-        */
-        return this.address;
-    }
+    public StringProperty addressProperty() {return this.address;}
     
-    /*
-    public StringProperty latitudeProperty()
-    {
-        /*
-        if(this.latitude == null)
-        {
-            this.latitude = new SimpleStringProperty(this, "latitude");
-        }
-        */
-    /*    return this.latitude;
-    }
-    */
+    public StringProperty locationProperty() {return this.location;}
     
-    /*
-    public StringProperty longitudeProperty()
-    {
-        /*
-        if(this.longitude == null)
-        {
-            this.longitude = new SimpleStringProperty(this, "longitude");
-        }
-        */
-    /*    return this.longitude;
-    }
-    */
+    public StringProperty numberProperty() {return this.number;}
     
-    public StringProperty locationProperty()
-    {
-        /*
-        if(this.number == null)
-        {
-            this.number = new SimpleStringProperty(this, "number");
-        }
-        */
-        return this.location;
-    }
-    
-    public StringProperty numberProperty()
-    {
-        /*
-        if(this.number == null)
-        {
-            this.number = new SimpleStringProperty(this, "number");
-        }
-        */
-        return this.number;
-    }
-    
-    public StringProperty imageProperty()
-    {
-        /*
-        if(this.image == null)
-        {
-            this.image = new SimpleStringProperty(this, "image");
-        }
-        */
-        return this.image;
-    }
+    public StringProperty imageProperty() {return this.image;}
 }

@@ -2,24 +2,19 @@ package Java.Structures;
 
 import Resources.Exceptions.DuplicateException;
 import Resources.Exceptions.UnderflowException;
-import Resources.Interfaces.IQueue;
+import Resources.Interfaces.I_Queue;
 
 /**
  * Purpose: To create a myQueue structure that takes generics
  * Order: enqueue(), dequeue(), isEmpty(), isFull(), size()
  * @author Cameron on 6/8/17
  */
-public class myQueue<E extends Comparable<E>> implements IQueue
+public class myQueue<E extends Comparable<E>> implements I_Queue
 {
     @Override
     public String toString()
     {
-        return "Queue: "
-               + "\n" +
-               "Front of Queue: " + "\n" + front
-               + "\n" +
-               "Back of Queue: " + "\n" + rear
-               + "\n";
+        return "Queue: " + "\n" + front + "\n";
     }
     
     //Constructor
@@ -33,7 +28,7 @@ public class myQueue<E extends Comparable<E>> implements IQueue
     @Override
     /**
      * Inserts a new element into the myQueue at the rear
-     * Specified By: enqueue() in interface IQueue
+     * Specified By: enqueue() in interface I_Queue
      * @param Object element - The element the user wants to insert into the myQueue
      * @return Void
      * @throws DuplicateException - If the element is already present in the myQueue
@@ -73,7 +68,7 @@ public class myQueue<E extends Comparable<E>> implements IQueue
     @Override
     /**
      * Removes the front of the myQueue in accordance with the FIFO principle of Queues
-     * Specified By: Dequeque() in interface IQueue
+     * Specified By: Dequeque() in interface I_Queue
      * @param None
      * @return Object - Returns the dequeued Object for possible manipulation
      * @throws UnderflowException - If the method is attempted on an empty myQueue
@@ -102,7 +97,7 @@ public class myQueue<E extends Comparable<E>> implements IQueue
     @Override
     /**
      * Checks to see if the myQueue has any contents
-     * Specified By: isEmpty() in interface IQueue
+     * Specified By: isEmpty() in interface I_Queue
      * @param None
      * @return Boolean - Returns true or false dependent on if myQueue has any elements in it
      */
@@ -114,7 +109,7 @@ public class myQueue<E extends Comparable<E>> implements IQueue
     @Override
     /**
      * This Linked List is unbounded and by that nature is never full
-     * Specified By: isFull() in interface IQueue
+     * Specified By: isFull() in interface I_Queue
      * @param None
      * @return Boolean - Returns true or false dependent on if the myQueue has reached its upper limit
      */

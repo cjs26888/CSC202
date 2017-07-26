@@ -1,7 +1,7 @@
 package Java.Controllers;
 
 import Java.Classes.Restaurant;
-import Java.Structures.BST;
+import Java.Structures.WeightedGraph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,11 +11,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -31,52 +30,109 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+import static java.lang.Math.*;
+
 /**
  * Created by Biggus on 6/23/2017.
  */
+
 public class RestaurantGUI implements Initializable
 {
     @FXML
     private Pane                  pane;
-    private TextField             Search;
+    private TextField             locationField;
+    private TextField             radiusField;
+    private TextField             attributeSearchField;
     private Stage                 stage;
     private Scene                 scene;
+    private TextArea              resultsArea;
+    private ImageView             imView;
+    private Button                backBtn;
+    private Button                attributeBtn;
+    private Button                locationBtn;
+    private TableView<Restaurant> tmpSheetTableOne;
     
-    private static BST<Restaurant> restaurantTree = new BST<>();
-
-    //todo Make clicking on a row show the restaurant info
+    
+    private static WeightedGraph<Restaurant> restaurantGraph = new WeightedGraph<>(130);
+    ObservableList<Restaurant> sheetCollection = FXCollections.observableArrayList();
+    ObservableList<Restaurant> justCollection = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
         //1366×768 is most common resolution
         pane.setMinSize(1300,750);
-        
-        Search = new TextField("Search");
-        Search.setOnKeyPressed(e -> {if(e.getCode() == KeyCode.ENTER){ Search(); }});
-        Search.setVisible(true);
-        Search.setAlignment(Pos.TOP_CENTER);
-        Search.setLayoutX(15.0);
-        Search.setLayoutY(7.5);
-        Search.setMinWidth(420);
-        
-        //System.out.println(readExcel());
     
-        TableView<Restaurant> tmpSheetTableOne = new TableView<>(readExcel());
+        backBtn = new Button();
+        backBtn.setOnMouseClicked(e -> switchScene());
+        backBtn.setLayoutY(500);
+        backBtn.setLayoutX(210);
+        backBtn.setPrefWidth(50);
+        backBtn.setPrefHeight(20);
+        backBtn.setText("Back");
+        
+        imView = new ImageView();
+        imView.setLayoutX(150);
+        imView.setLayoutY(330);
+        imView.setFitWidth(400);
+        imView.setFitHeight(160);
+        imView.setPickOnBounds(true);
+        imView.setPreserveRatio(true);
+        
+        resultsArea = new TextArea();
+        resultsArea = new TextArea();
+        resultsArea.setEditable(false);
+        resultsArea.setLayoutX(15);
+        resultsArea.setLayoutY(15);
+        resultsArea.setPrefHeight(300);
+        resultsArea.setPrefWidth(450);
+        
+        locationBtn = new Button("...");
+        locationBtn.setOnMouseClicked(i -> locationResults());
+        locationBtn.setAlignment(Pos.TOP_CENTER);
+        locationBtn.setDefaultButton(true);
+        locationBtn.setLayoutX(850);
+        locationBtn.setLayoutY(6.5);
+        locationBtn.setPrefHeight(26);
+        locationBtn.setPrefWidth(26);
+        
+        radiusField = new TextField("Within This Radius");
+        radiusField.setVisible(true);
+        radiusField.setAlignment(Pos.TOP_CENTER);
+        radiusField.setLayoutX(660.0);
+        radiusField.setLayoutY(7.5);
+        radiusField.setMinWidth(210);
+        
+        locationField = new TextField("Find A Restaurant Near You");
+        locationField.setVisible(true);
+        locationField.setAlignment(Pos.TOP_CENTER);
+        locationField.setLayoutX(450.0);
+        locationField.setLayoutY(7.5);
+        locationField.setMinWidth(210);
+        
+        attributeSearchField = new TextField("Search");
+        attributeSearchField.setOnKeyPressed(e -> {if(e.getCode() == KeyCode.ENTER){ Search(); }});
+        attributeSearchField.setVisible(true);
+        attributeSearchField.setAlignment(Pos.TOP_CENTER);
+        attributeSearchField.setLayoutX(15.0);
+        attributeSearchField.setLayoutY(7.5);
+        attributeSearchField.setMinWidth(420);
+    
+        tmpSheetTableOne = new TableView<>(readExcel());
         tmpSheetTableOne.setOnMouseClicked(e -> tableSearch(tmpSheetTableOne));
         tmpSheetTableOne.setMinSize(1300, 750);
         tmpSheetTableOne.setPadding(new Insets(0, 15, 15, 0));
         tmpSheetTableOne.setLayoutX(15);
         tmpSheetTableOne.setLayoutY(45);
     
-        Button tmpSearchBtnOne = new Button("...");
-        tmpSearchBtnOne.setAlignment(Pos.TOP_CENTER);
-        tmpSearchBtnOne.setDefaultButton(true);
-        tmpSearchBtnOne.setLayoutX(409);
-        tmpSearchBtnOne.setLayoutY(6.5);
-        tmpSearchBtnOne.setOnMouseClicked(e -> Search());
-        tmpSearchBtnOne.setPrefHeight(26);
-        tmpSearchBtnOne.setPrefWidth(26);
+        attributeBtn = new Button("...");
+        attributeBtn.setAlignment(Pos.TOP_CENTER);
+        attributeBtn.setDefaultButton(true);
+        attributeBtn.setLayoutX(409);
+        attributeBtn.setLayoutY(6.5);
+        attributeBtn.setOnMouseClicked(e -> Search());
+        attributeBtn.setPrefHeight(26);
+        attributeBtn.setPrefWidth(26);
         
         TableColumn<Restaurant, String> NameCol = new TableColumn<>("Name");
         NameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -106,7 +162,7 @@ public class RestaurantGUI implements Initializable
         tmpSheetTableOne.setItems(readExcel());
         tmpSheetTableOne.getColumns().addAll(NameCol, AddressCol, LatitudeCol, LongitudeCol, NumberCol, ImageCol);
         
-        pane.getChildren().addAll(Search, tmpSearchBtnOne, tmpSheetTableOne);
+        pane.getChildren().addAll(attributeSearchField, attributeBtn, tmpSheetTableOne, radiusField, locationField, locationBtn);
     }
     
     @SuppressWarnings({"unchecked", "unchecked"})
@@ -114,7 +170,6 @@ public class RestaurantGUI implements Initializable
     {
         String                     fileName        = "RestaurantsList.xls";
         FileInputStream            fis;
-        ObservableList<Restaurant> sheetCollection = FXCollections.observableArrayList();
         
         // Make fis empty just in case
         fis = null;
@@ -187,7 +242,7 @@ public class RestaurantGUI implements Initializable
                     }
                 }
                 
-                restaurantTree.add(Imos);
+                restaurantGraph.addVertex(Imos);
                 sheetCollection.add(Imos);
                 //System.out.println("Data List: " + Data.toString());
                 //System.out.println("Sheet Data: " + sheetData.toString());
@@ -214,29 +269,14 @@ public class RestaurantGUI implements Initializable
     
         return sheetCollection;
     }
-
+    
     public void Search()
     {
         String tmp = "";
-        String key = Search.getText();
         int type = 0;
 
-        try
-        {
-            stage = (Stage) this.Search.getScene().getWindow();
-            stage.close();
-            Parent RPopUp = FXMLLoader.load(this.getClass().getResource("/Resources/View/RestaurantPopUp.fxml"));
-            scene = new Scene(RPopUp);
-            stage.setScene(scene);
-            stage.show();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        if(key.contains(",")) {
-            tmp = key.substring(0, key.indexOf(","));
+        if(attributeSearchField.getText().contains(",")) {
+            tmp = attributeSearchField.getText().substring(0, attributeSearchField.getText().indexOf(","));
         }
 
         if(Pattern.matches("[\\d]+[\\.][\\d]+", tmp))
@@ -244,12 +284,12 @@ public class RestaurantGUI implements Initializable
             //key is a coordinate
             type = 1;
         }
-        if (Pattern.matches("^[\\d]{10}", key))
+        else if (Pattern.matches("^[\\d]{10}",attributeSearchField.getText()))
         {
             //key is a number
             type = 2;
         }
-        if (Pattern.matches("^[^\\d]+[a-zA-Z]+", key))
+        else if (Pattern.matches("^[^\\d]+[a-zA-Z]+", attributeSearchField.getText()))
         {
             //key is a name
             type = 3;
@@ -259,15 +299,169 @@ public class RestaurantGUI implements Initializable
 
         if(type != 0)
         {
-            RestaurantPopUp.showResults(key, restaurantTree, type);
+            attributeResults(type);
         }
     }
     
-    public void tableSearch(TableView table)
+    public void attributeResults(int dataType)
+    {
+        String              tmpString = "";
+        Image               im        = null;
+        Restaurant          tmpRest;
+    
+        //tmpRest holds the dequeued Restaurant and anotherRest was just hholding a Restaurant with one attribute
+        for (int i = 0; i < restaurantGraph.getNumVertices(); i++)
+        {
+            
+            tmpRest = (Restaurant) restaurantGraph.getVertices(i);
+        
+            switch (dataType)
+            {
+                case 1:
+                    //datatype == 1 is a coordinate
+                    if(tmpRest.getLocation().equals(attributeSearchField.getText()))
+                    {
+                        tmpString = tmpRest.toString();
+                        tmpString = tmpString.replace("StringProperty [value: ", "");
+                        tmpString = tmpString.replace("]", "");
+                        im = new Image(tmpRest.getImage());
+                    }
+                    else
+                    {
+                        tmpString = "Element not in list";
+                    }
+                    break;
+                case 2:
+                    //datatype == 2 is a number
+                    if(tmpRest.getNumber().equals(attributeSearchField.getText()))
+                    {
+                        tmpString = tmpRest.toString();
+                        tmpString = tmpString.replace("StringProperty [value: ", "");
+                        tmpString = tmpString.replace("]", "");
+                        im = new Image(tmpRest.getImage());
+                    }
+                    else
+                    {
+                        tmpString = "Element not in list";
+                    }
+                    break;
+                case 3:
+                    //datatype == 3 is a name
+                    if(tmpRest.getName().equals(attributeSearchField.getText()))
+                    {
+                        tmpString = tmpRest.toString();
+                        tmpString = tmpString.replace("StringProperty [value: ", "");
+                        tmpString = tmpString.replace("]", "");
+                        im = new Image(tmpRest.getImage());
+                    }
+                    else
+                    {
+                        tmpString = "Element not in list";
+                    }
+                    break;
+            }
+        
+            imView.setImage(im);
+            resultsArea.setText(tmpString);
+        }
+    }
+    
+    public void locationResults()
+    {
+        Restaurant focus        = null;
+        Restaurant restOfCollection;
+        Restaurant userLocation = new Restaurant();
+        double     restOfCollectionLat, restOfCollectionLong, focusLat, focusLong;
+        String     output;
+        String     lati         = locationField.getText().substring(locationField.getText().indexOf(".")-2, locationField.getText().lastIndexOf(".")-3);
+        String     longi        = locationField.getText().substring(locationField.getText().lastIndexOf(".") - 3);
+        
+        lati = lati.replace(" ", "");
+        lati = lati.replace(",", "");
+        
+        userLocation.setLocation("0, 0");
+        userLocation.setLatitude(lati);
+        userLocation.setLongitude(longi);
+        userLocation.setName("Your Location");
+    
+        restaurantGraph.addVertex(userLocation);
+        sheetCollection.add(0, userLocation);
+        
+        for(int i = 0; i < sheetCollection.size(); i++)
+        {
+            focus = sheetCollection.get(i);
+            output = focus.getLatitude();
+            output = output.replace(",", "");
+            focusLat = Double.parseDouble(output);
+            output = focus.getLongitude();
+            output = output.replace(",", "");
+            focusLong = Double.parseDouble(output);
+            output = "";
+    
+            for (int j = (i + 1); j < sheetCollection.size(); j++)
+            {
+                restOfCollection = sheetCollection.get(j);
+                restOfCollectionLat = Double.parseDouble(restOfCollection.getLatitude().substring(0, 5));
+                restOfCollectionLong = Double.parseDouble(restOfCollection.getLongitude().substring(0, 5).replace(",", ""));
+    
+                restaurantGraph.addEdge(focus, restOfCollection, haversineDistance(focusLong, restOfCollectionLong, focusLat, restOfCollectionLat));
+            }
+        }
+        
+        for(int i = 0; i < tmpSheetTableOne.getItems().size(); i++)
+        {
+            //System.out.println(sheetCollection.get(i).getName() + " " + restaurantGraph.weightIs(userLocation, sheetCollection.get(i)) + " " + Integer.parseInt(radiusField.getText()));
+            if (restaurantGraph.weightIs(userLocation, sheetCollection.get(i)) <= Integer.parseInt(radiusField.getText()))
+            {
+                justCollection.add(sheetCollection.get(i));
+            }
+        }
+        
+        tmpSheetTableOne.getItems().clear();
+        tmpSheetTableOne.setItems(justCollection);
+    }
+    
+    public int haversineDistance(double Lon1, double Lon2, double Lat1, double Lat2)
+    {
+        final double EARTHS_RADIUS_KM = 6371;
+    
+        double a, c;
+    
+        double dLat = toRadians(Lat2 - Lat1);
+        double dLon = toRadians(Lon2 - Lon1);
+    
+        Lat2 = toRadians(Lat2);
+        Lat1 = toRadians(Lat1);
+    
+        a = pow(sin(dLat/2), 2) + cos(Lat1) * cos(Lat2) * pow(sin(dLon/2), 2);
+        c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    
+        return (int) ((int) EARTHS_RADIUS_KM * c);
+    }
+    
+    private void tableSearch(TableView table)
     {
         Restaurant item = (Restaurant) table.getSelectionModel().getSelectedItem();
         //System.out.println(item.getName());
-        Search.setText(item.getName());
+        attributeSearchField.setText(item.getName());
         Search();
+    }
+    
+    private void switchScene()
+    {
+        Stage stage = (Stage) backBtn.getScene().getWindow();
+        stage.close();
+        Parent RPopUp;
+        try
+        {
+            RPopUp = FXMLLoader.load(this.getClass().getResource("/Resources/View/Main.fxml"));
+            Scene scene = new Scene(RPopUp);
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
