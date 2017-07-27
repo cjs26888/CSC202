@@ -22,6 +22,9 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
     }
     
     @Override
+    /**
+     * @return String - the Heap returned in a user friendly visual way
+     */
     public String toString()
     {
         String tmpStr = "";
@@ -43,16 +46,28 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
     }
     
     //Member Methods
+    /**
+     * @return boolean - The value determined by the test, is the lastIndex variable equal to -1, its value before anything is added to the heap
+     * @throws
+     */
     public boolean isEmpty()
     {
         return (lastIndex == -1);
     }
-    
+
+    /**
+     * @return boolean - The value determined by a test that accesses whether the lastIndex variable is the same number as the maxIndex variable, thus meaning teh Heap can hold no more objects
+     */
     public boolean isFull()
     {
         return (lastIndex == maxIndex);
     }
-    
+
+    /**
+     * @param item - the object to be added to the heap
+     * @return void
+     * @throws OverflowException - If the heap is already full
+     */
     @Override
     public void enqueue(Object item) throws OverflowException
     {
@@ -66,7 +81,11 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
                 reheapUp((Comparable) item);
             }
     }
-    
+
+    /**
+     * @return Comparable - The object that is removed from the heap
+     * @throws UnderflowException - If the heap is full
+     */
     @Override
     public Comparable dequeue() throws UnderflowException
     {
@@ -85,7 +104,11 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
             return hold;
         }
     }
-    
+
+    /**
+     * @param item - The item that is to be moved up in the heap to its appropriate place based on the rules of a heap
+     * @return void
+     */
     private void reheapUp(Comparable item)
     {
         int hole = lastIndex;
@@ -96,7 +119,12 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
         }
         elements[hole] = (E) item;
     }
-    
+
+    /**
+     * @param hole - the current hole
+     * @param item - The item that is added or removed
+     * @return int - The hole position in the heap array that is needed to be filled when a new object is added or removed
+     */
     private int newHole(int hole, Comparable item)
     {
         int left = (hole * 2) + 1;
@@ -136,7 +164,11 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
             return left;
         }
     }
-    
+
+    /**
+     * @param item - The item that is to be moved down in the heap to its appropriate place based on the rules of a heap
+     * @return void
+     */
     private void reheapDown(Comparable item)
     {
         int hole = 0;
@@ -150,7 +182,10 @@ public class myHeap<E extends Comparable<E>> implements I_PriorityQueue
         }
         elements[hole] = (E) item;
     }
-    
+
+    /**
+     * @return int - The size of the heap when completely walked through
+     */
     public int sizeOf()
     {
         int count = 0;

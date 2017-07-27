@@ -1,7 +1,5 @@
 package Java.Controllers;
 
-import Java.Classes.Restaurant;
-import Java.Structures.BST;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -29,7 +26,6 @@ public class RestaurantPopUp implements Initializable {
     static Button btn;
     static TextArea resultsArea;
     static ImageView imView;
-    static String image;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,46 +57,21 @@ public class RestaurantPopUp implements Initializable {
         pane.getChildren().addAll(imView, resultsArea, btn);
     }
 
-    public static String showResults(String getText, BST<Restaurant> tree, int dataType) {
-        Restaurant anotherRest = new Restaurant();
-
-        switch (dataType) {
-            case 1:
-                //datatype == 1 is a coordinate
-                anotherRest.setLocation(getText);
-                break;
-            case 2:
-                //datatype == 2 is a number
-                anotherRest.setNumber(getText);
-                break;
-            case 3:
-                //datatype == 3 is a name
-                anotherRest.setName(getText);
-                break;
-        }
-
-        if (tree.contains(anotherRest))
-        {
-            anotherRest = (Restaurant) tree.get(anotherRest);
-            String tmpString = anotherRest.toString();
-
-            image = anotherRest.getImage();
-            //System.out.println(image);
-            Image im = new Image(image);
-            imView.setImage(im);
-
-            tmpString = tmpString.replace("StringProperty [value: ", "");
-            tmpString = tmpString.replace("]", "");
-            resultsArea.setText(tmpString);
-        }
-        else
-        {
-            resultsArea.setText("Element not in list");
-        }
-
-        return anotherRest.getImage();
+    /**
+     * @param iv - The ImageView object from another Controller file
+     * @param tArea - the TextArea object ffrom another Controller
+     * @return void
+     */
+    public static void showResults(ImageView iv, TextArea tArea)
+    {
+        imView = iv;
+        resultsArea = tArea;
     }
-    
+
+    /**
+     * @return void
+     * @throws IOException - if the file cannot be found
+     */
     public void switchScene()
     {
         Stage stage = (Stage) btn.getScene().getWindow();

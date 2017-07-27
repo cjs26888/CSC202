@@ -42,25 +42,38 @@ public class BST<T extends Comparable<T>> implements I_BST
     public BST(Object item1, Object item2){ this.add(item1); this.add(item2); }
     
     //Determines if the Tree has a component element
+    /**
+     * @return boolean - The value determining whether the BST is empty given by accessing if the root is null
+     */
     @Override
     public boolean isEmpty()
     {
         return (root == null);
     }
-    
+
+    /**
+     * @return boolean - Always false as this BST is link- not array-based
+     */
     @Override
     public boolean isFull()
     {
         //Always false as this is a theoretically limitless tree
         return false;
     }
-    
+
+    /**
+     * @return int - The value determined by the recSize() method when you pass it the root
+     */
     @Override
     public int size()
     {
         return recSize(root);
     }
-    
+
+    /**
+     * @param item - The object to be looked for in the BST
+     * @return boolean - The value accessed when you pass recContains() the root
+     */
     @Override
     public boolean contains(Object item)
     {
@@ -73,25 +86,41 @@ public class BST<T extends Comparable<T>> implements I_BST
             throw new UnderflowException("contains() attempted on an empty Tree");
         }
     }
-    
+
+    /**
+     * @param item - The item to get from the BST
+     * @return Object = To object returned from the recGet() method when passed root and item
+     */
     @Override
     public Object get(Object item)
     {
         return recGet(item, root);
     }
-    
+
+    /**
+     * @param item - The item to be added to the BST
+     * @return void
+     */
     @Override
     public void add(Object item)
     {
         root = recAdd(item,root);
     }
-    
+
+    /**
+     * @param item - The object to be removed from the BST
+     * @return void
+     */
     @Override
     public void remove(Object item)
     {
         root = recRemove(item, root);
     }
-    
+
+    /**
+     * @param orderType - The user determine orderType that they want the BST to be reset in; INORDER, PREORDER, and POSTORDER
+     * @return int - The size the BST, This is returned for simplicity
+     */
     @Override
     public int reset(int orderType)
     {
@@ -131,7 +160,11 @@ public class BST<T extends Comparable<T>> implements I_BST
         
         return size();
     }
-    
+
+    /**
+     * @param orderType - The user determine orderType that they want the BST to be reset in; INORDER, PREORDER, and POSTORDER
+     * @return Object - The Object that is next on the BSt determined by the orderType variable
+     */
     @Override
     public Object getNext(int orderType)
     {
@@ -164,7 +197,9 @@ public class BST<T extends Comparable<T>> implements I_BST
         return tmp;
     }
 
-    //todo needs to show by inorder, postorder, preorder
+    /**
+     * @return String - The whole BST displayed in order
+     */
     @Override
     public String toString()
     {
@@ -184,7 +219,11 @@ public class BST<T extends Comparable<T>> implements I_BST
         }
         return str;
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @return void
+     */
     private void inOrder(BST_Node node)
     {
         if(node != null)
@@ -196,7 +235,11 @@ public class BST<T extends Comparable<T>> implements I_BST
         }
         
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @return void
+     */
     private void preOrder(BST_Node node)
     {
         if(node != null)
@@ -206,7 +249,11 @@ public class BST<T extends Comparable<T>> implements I_BST
             preOrder(node.right);
         }
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @return void
+     */
     private void postOrder(BST_Node node)
     {
         if(node != null)
@@ -216,7 +263,11 @@ public class BST<T extends Comparable<T>> implements I_BST
             PostOrder.enqueue(node.info);
         }
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @return BST_Node - Returns the node that was removed
+     */
     private BST_Node removeNode(BST_Node node)
     {
         if (node.left == null)
@@ -238,7 +289,12 @@ public class BST<T extends Comparable<T>> implements I_BST
         
         return node;
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @param item - The item to be removed
+     * @return BST_Node - The node removed
+     */
     private BST_Node recRemove(Object item, BST_Node node)
     {
         if(!isEmpty() && contains(item))
@@ -264,21 +320,14 @@ public class BST<T extends Comparable<T>> implements I_BST
         
         return node;
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @param item - The item value that is to be added to the BST
+     * @return BST_Node - The node to be added
+     */
     private BST_Node recAdd(Object item, BST_Node node)
     {
-        // Check the current node if > or <
-        // > check child. If child == null set node's right child to the value
-        // < "                                      " left child  "          "
-        // if the left or right child is filled check that one and go back to the top line
-        
-        /*
-        if(!isEmpty())
-        {
-            System.out.println("\nContains(\n\n" + item + "\n): " + contains(item));
-        }
-        */
-        
         if(!isEmpty())
         {
             if(node == null)
@@ -297,10 +346,6 @@ public class BST<T extends Comparable<T>> implements I_BST
                     node.right = recAdd(item, node.right);
                 }
             }
-            /*else
-            {
-                throw new DuplicateException("Element already exists in this Tree");
-            }*/
         }
         else
         {
@@ -310,7 +355,12 @@ public class BST<T extends Comparable<T>> implements I_BST
         
         return node;
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @param item - The object's value that is to be found and returned from the BST
+     * @return Object - The node's info
+     */
     private Object recGet(Object item, BST_Node node)
     {
         if(!isEmpty() && contains(item))
@@ -331,14 +381,21 @@ public class BST<T extends Comparable<T>> implements I_BST
         
         return node.info;
     }
-    
-    //Counts and sends back the number of constituent nodes
-    //Node is empty. If true: return 0 as the size. If false: Run, recursively the method on node's constituents
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @return int - The size of the BST
+     */
     private int recSize(BST_Node node)
     {
         return ((node == null) ? 0 : recSize(node.left) + recSize(node.right) + 1);
     }
-    
+
+    /**
+     * @param node - The node on the BST with links to its children
+     * @param item - The value that the method is to search for in the BST and change a boolean value if it does or does not contain that value
+     * @return boolean - True or false based on the functions tests
+     */
     private boolean recContains(Object item, BST_Node node)
     {
         //Initializing boolContains means if none of the conditions are true the item is found
@@ -360,13 +417,16 @@ public class BST<T extends Comparable<T>> implements I_BST
     
         return boolContains;
     }
-    
+
+    /**
+     * @return myQueue - the Queue of all the nodes sorted by the inOrder function
+     */
     public myQueue getInOrder()
     {
         return InOrder;
     }
     
-    public myQueue getPreOrder()
+    /*public myQueue getPreOrder()
     {
         return PreOrder;
     }
@@ -375,4 +435,5 @@ public class BST<T extends Comparable<T>> implements I_BST
     {
         return PostOrder;
     }
+    */
 }

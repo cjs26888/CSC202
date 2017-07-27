@@ -2,6 +2,7 @@ package Java.Controllers;
 
 import Java.Classes.Restaurant;
 import Java.Structures.WeightedGraph;
+import Resources.Exceptions.InvalidInputException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,9 +46,7 @@ public class RestaurantGUI implements Initializable
     private TextField             attributeSearchField;
     private Stage                 stage;
     private Scene                 scene;
-    private TextArea              resultsArea;
     private ImageView             imView;
-    private Button                backBtn;
     private Button                attributeBtn;
     private Button                locationBtn;
     private TableView<Restaurant> tmpSheetTableOne;
@@ -61,37 +60,21 @@ public class RestaurantGUI implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         //1366×768 is most common resolution
-        pane.setMinSize(1300,750);
-    
-        backBtn = new Button();
-        backBtn.setOnMouseClicked(e -> switchScene());
-        backBtn.setLayoutY(500);
-        backBtn.setLayoutX(210);
-        backBtn.setPrefWidth(50);
-        backBtn.setPrefHeight(20);
-        backBtn.setText("Back");
+        pane.setMinSize(2000,750);
         
         imView = new ImageView();
-        imView.setLayoutX(150);
-        imView.setLayoutY(330);
+        imView.setLayoutX(15);
+        imView.setLayoutY(15);
         imView.setFitWidth(400);
         imView.setFitHeight(160);
         imView.setPickOnBounds(true);
         imView.setPreserveRatio(true);
         
-        resultsArea = new TextArea();
-        resultsArea = new TextArea();
-        resultsArea.setEditable(false);
-        resultsArea.setLayoutX(15);
-        resultsArea.setLayoutY(15);
-        resultsArea.setPrefHeight(300);
-        resultsArea.setPrefWidth(450);
-        
         locationBtn = new Button("...");
         locationBtn.setOnMouseClicked(i -> locationResults());
         locationBtn.setAlignment(Pos.TOP_CENTER);
         locationBtn.setDefaultButton(true);
-        locationBtn.setLayoutX(850);
+        locationBtn.setLayoutX(1265);
         locationBtn.setLayoutY(6.5);
         locationBtn.setPrefHeight(26);
         locationBtn.setPrefWidth(26);
@@ -99,14 +82,14 @@ public class RestaurantGUI implements Initializable
         radiusField = new TextField("Within This Radius");
         radiusField.setVisible(true);
         radiusField.setAlignment(Pos.TOP_CENTER);
-        radiusField.setLayoutX(660.0);
+        radiusField.setLayoutX(1075);
         radiusField.setLayoutY(7.5);
         radiusField.setMinWidth(210);
         
         locationField = new TextField("Find A Restaurant Near You");
         locationField.setVisible(true);
         locationField.setAlignment(Pos.TOP_CENTER);
-        locationField.setLayoutX(450.0);
+        locationField.setLayoutX(865);
         locationField.setLayoutY(7.5);
         locationField.setMinWidth(210);
         
@@ -114,7 +97,7 @@ public class RestaurantGUI implements Initializable
         attributeSearchField.setOnKeyPressed(e -> {if(e.getCode() == KeyCode.ENTER){ Search(); }});
         attributeSearchField.setVisible(true);
         attributeSearchField.setAlignment(Pos.TOP_CENTER);
-        attributeSearchField.setLayoutX(15.0);
+        attributeSearchField.setLayoutX(430);
         attributeSearchField.setLayoutY(7.5);
         attributeSearchField.setMinWidth(420);
     
@@ -122,13 +105,13 @@ public class RestaurantGUI implements Initializable
         tmpSheetTableOne.setOnMouseClicked(e -> tableSearch(tmpSheetTableOne));
         tmpSheetTableOne.setMinSize(1300, 750);
         tmpSheetTableOne.setPadding(new Insets(0, 15, 15, 0));
-        tmpSheetTableOne.setLayoutX(15);
+        tmpSheetTableOne.setLayoutX(430);
         tmpSheetTableOne.setLayoutY(45);
     
         attributeBtn = new Button("...");
         attributeBtn.setAlignment(Pos.TOP_CENTER);
         attributeBtn.setDefaultButton(true);
-        attributeBtn.setLayoutX(409);
+        attributeBtn.setLayoutX(824);
         attributeBtn.setLayoutY(6.5);
         attributeBtn.setOnMouseClicked(e -> Search());
         attributeBtn.setPrefHeight(26);
@@ -162,9 +145,13 @@ public class RestaurantGUI implements Initializable
         tmpSheetTableOne.setItems(readExcel());
         tmpSheetTableOne.getColumns().addAll(NameCol, AddressCol, LatitudeCol, LongitudeCol, NumberCol, ImageCol);
         
-        pane.getChildren().addAll(attributeSearchField, attributeBtn, tmpSheetTableOne, radiusField, locationField, locationBtn);
+        pane.getChildren().addAll(attributeSearchField, attributeBtn, tmpSheetTableOne, radiusField, locationField, locationBtn, imView);
     }
-    
+
+    /**
+     * @return ObservableList - The List of Restaurant read from the Excel sheet that can be used in the constructor for the Table
+     * @throws - Throws IOException if the file cannot be found
+     */
     @SuppressWarnings({"unchecked", "unchecked"})
     public ObservableList readExcel()
     {
@@ -269,7 +256,10 @@ public class RestaurantGUI implements Initializable
     
         return sheetCollection;
     }
-    
+
+    /**
+     * @return void
+     */
     public void Search()
     {
         String tmp = "";
@@ -302,19 +292,23 @@ public class RestaurantGUI implements Initializable
             attributeResults(type);
         }
     }
-    
+
+    /**
+     * @param dataType - Takes the number "dataType" that has been determined in Search
+     * @return void
+     * @throws InvalidInputException - Throws this when the input for Searching is not one that is in the Table
+     */
     public void attributeResults(int dataType)
     {
         String              tmpString = "";
         Image               im        = null;
-        Restaurant          tmpRest;
-    
+        Restaurant          tmpRest   = new Restaurant();
+        
         //tmpRest holds the dequeued Restaurant and anotherRest was just hholding a Restaurant with one attribute
         for (int i = 0; i < restaurantGraph.getNumVertices(); i++)
         {
-            
             tmpRest = (Restaurant) restaurantGraph.getVertices(i);
-        
+
             switch (dataType)
             {
                 case 1:
@@ -322,13 +316,7 @@ public class RestaurantGUI implements Initializable
                     if(tmpRest.getLocation().equals(attributeSearchField.getText()))
                     {
                         tmpString = tmpRest.toString();
-                        tmpString = tmpString.replace("StringProperty [value: ", "");
-                        tmpString = tmpString.replace("]", "");
                         im = new Image(tmpRest.getImage());
-                    }
-                    else
-                    {
-                        tmpString = "Element not in list";
                     }
                     break;
                 case 2:
@@ -336,13 +324,7 @@ public class RestaurantGUI implements Initializable
                     if(tmpRest.getNumber().equals(attributeSearchField.getText()))
                     {
                         tmpString = tmpRest.toString();
-                        tmpString = tmpString.replace("StringProperty [value: ", "");
-                        tmpString = tmpString.replace("]", "");
                         im = new Image(tmpRest.getImage());
-                    }
-                    else
-                    {
-                        tmpString = "Element not in list";
                     }
                     break;
                 case 3:
@@ -350,22 +332,29 @@ public class RestaurantGUI implements Initializable
                     if(tmpRest.getName().equals(attributeSearchField.getText()))
                     {
                         tmpString = tmpRest.toString();
-                        tmpString = tmpString.replace("StringProperty [value: ", "");
-                        tmpString = tmpString.replace("]", "");
                         im = new Image(tmpRest.getImage());
-                    }
-                    else
-                    {
-                        tmpString = "Element not in list";
                     }
                     break;
             }
-        
-            imView.setImage(im);
-            resultsArea.setText(tmpString);
         }
+        imView.setImage(im);
+        Restaurant tRe;
+        for(int i = 0; i < tmpSheetTableOne.getItems().size(); i++)
+        {
+            tRe = (Restaurant) restaurantGraph.getVertices(i);
+            //System.out.println(sheetCollection.get(i).getName() + " " + restaurantGraph.weightIs(userLocation, sheetCollection.get(i)) + " " + Integer.parseInt(radiusField.getText()));
+            if (tRe.getName().equals(attributeSearchField.getText()))
+            {
+                justCollection.add(tRe);
+            }
+        }
+        tmpSheetTableOne.getItems().clear();
+        tmpSheetTableOne.setItems(justCollection);
     }
-    
+
+    /**
+     * @return void
+     */
     public void locationResults()
     {
         Restaurant focus        = null;
@@ -420,7 +409,14 @@ public class RestaurantGUI implements Initializable
         tmpSheetTableOne.getItems().clear();
         tmpSheetTableOne.setItems(justCollection);
     }
-    
+
+    /**
+     * @param Lon1 - the Longitude of the first object
+     * @param Lon2 - the Longitude of the first object
+     * @param Lat1 - the Latitude of the first object
+     * @param Lat2 - The Latitude of the Second object
+     * @return int - Returns the value determined by the haversine formula
+     */
     public int haversineDistance(double Lon1, double Lon2, double Lat1, double Lat2)
     {
         final double EARTHS_RADIUS_KM = 6371;
@@ -438,7 +434,11 @@ public class RestaurantGUI implements Initializable
     
         return (int) ((int) EARTHS_RADIUS_KM * c);
     }
-    
+
+    /**
+     * @param table - table is the displayed table, it is passed because it hold the information needed to display to the user
+     * @return void
+     */
     private void tableSearch(TableView table)
     {
         Restaurant item = (Restaurant) table.getSelectionModel().getSelectedItem();
@@ -446,15 +446,20 @@ public class RestaurantGUI implements Initializable
         attributeSearchField.setText(item.getName());
         Search();
     }
-    
-    private void switchScene()
+
+    /**
+     * @param sceneA - The String that hold the .fxml file to be switched to
+     * @return void
+     * @throws IOException - if the file is not found
+     */
+    private void switchScene(String sceneA)
     {
-        Stage stage = (Stage) backBtn.getScene().getWindow();
+        Stage stage = (Stage) pane.getScene().getWindow();
         stage.close();
         Parent RPopUp;
         try
         {
-            RPopUp = FXMLLoader.load(this.getClass().getResource("/Resources/View/Main.fxml"));
+            RPopUp = FXMLLoader.load(this.getClass().getResource(sceneA));
             Scene scene = new Scene(RPopUp);
             stage.setScene(scene);
             stage.show();

@@ -19,7 +19,7 @@
             </VBox.margin>
         </PasswordField>
         <Label fx:id="passLBL" text="Label" textFill="#f50303" translateX="138.0" visible="false" />
-        <Button fx:id="signIn" mnemonicParsing="false" onMouseClicked="#signin" text="Sign In" translateX="200.0" translateY="10.0" />
-      <Button fx:id="btnBack2" mnemonicParsing="false" onMouseClicked="#back" prefHeight="25.0" prefWidth="52.0" text="Back" translateX="50.0" translateY="-15.0" />
+        <Button fx:id="signIn" mnemonicParsing="false" onMouseClicked="#signin" text="Sign In" translateX="50.0" translateY="10.0" />
+      <Button fx:id="btnBack2" mnemonicParsing="false" onMouseClicked="#back" prefHeight="25.0" prefWidth="52.0" text="Back" translateX="200.0" translateY="-15.0" />
     </children>
 </VBox>

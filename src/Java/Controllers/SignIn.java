@@ -29,7 +29,11 @@ public class SignIn implements Initializable
     @FXML
     Label passLBL;
     Stage stage;
-    
+
+    /**
+     * @return - void
+     * @throws - IOException - if the file is not found
+     */
     public void signin() throws IOException
     {
         Stage stage = new Stage();
@@ -67,7 +71,11 @@ public class SignIn implements Initializable
             stage.show();
         }
     }
-    
+
+    /**
+     * @return void
+     * @throws IOException - if the file is not found
+     */
     public void back() throws IOException {
         Stage temp = (Stage) Pass.getScene().getWindow();
         temp.close();

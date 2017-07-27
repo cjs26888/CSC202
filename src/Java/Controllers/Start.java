@@ -41,7 +41,11 @@ public class Start extends Application
     {
         switchViews("/Resources/View/SignIn.fxml", signIn);
     }
-    
+
+    /**
+     * @return String - The UserName or null depending on if the file was successfully found
+     * @throws IOException - if the file is not found
+     */
     public static String readFile()
     {
         try
@@ -57,7 +61,12 @@ public class Start extends Application
         }
         return null;
     }
-    
+
+    /**
+     * @param Noob - The User used to store the value pulled from the file
+     * @return void
+     * @throws IOException - if the file is not found
+     */
     public static void writeFile(User Noob) throws IOException
     {
         //System.out.println("User to be written: " + "\n" + Noob.toString());
@@ -80,7 +89,12 @@ public class Start extends Application
             System.err.println("Already Exists: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * @param u - The UserName used for speeding up the process
+     * @return User - Returns the found user
+     * @throws IOException - if the file is not found
+     */
     public static User getUser(String u)
     {
         FileInputStream   fis;
@@ -126,7 +140,13 @@ public class Start extends Application
         //System.out.println(tmpUserOne.toString());
         return tmpUserOne;
     }
-    
+
+    /**
+     * @param fxmlFile - The String value of the fxml file to be opened
+     * @param o - control object that will help close the current scene
+     * @return void
+     * @throws IOException - if the file is not found
+     */
     public void switchViews(String fxmlFile, Object o) throws IOException
     {
         if(o != null)

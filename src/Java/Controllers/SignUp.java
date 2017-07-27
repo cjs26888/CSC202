@@ -31,6 +31,9 @@ import static Java.Controllers.Start.writeFile;
 /**
  * Created by Biggus on 6/2/2017.
  */
+
+//todo: Show required fields
+// todo: Search all fields
 public class SignUp implements Initializable
 {
     @FXML
@@ -71,7 +74,12 @@ public class SignUp implements Initializable
                 "Don't Wish to Answer"
                                    );
     }
-    
+
+    /**
+     * @param p - A User that holds the information to be tested
+     * @return boolean - True or flaase depending on if User p passes the requirements
+     * @throws IOException - if the file is not found
+     */
     private boolean test(User p) throws IOException {
         //Declarations
         boolean       check = true;
@@ -104,7 +112,11 @@ public class SignUp implements Initializable
         }
         return check;
     }
-    
+
+    /**
+     * @return File - The user chosen Image file
+     * @throws IOException - if the file is not found
+     */
     public File chooseImage() {
         FileChooser chooser = new FileChooser();
         
@@ -123,7 +135,11 @@ public class SignUp implements Initializable
         }
         return file;
     }
-    
+
+    /**
+     * @return void
+     * @throws IOException - if the file is not found
+     */
     public void setValues() throws IOException {
         String  u;
         String  e;
@@ -183,7 +199,11 @@ public class SignUp implements Initializable
             confirmPassword.clear();
         }
     }
-    
+
+    /**
+     * @return void
+     * @throws IOException - if the file is not found
+     */
     public void back() throws IOException
     {
         Stage temp = (Stage) firstName.getScene().getWindow();
